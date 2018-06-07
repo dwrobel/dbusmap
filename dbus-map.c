@@ -219,9 +219,14 @@ int main(int argc, char **argv)
         proc_t  *p = get_name_process(bus, str);
 
         if (p) {
-            g_print("%d\t%16s\t%40s%c\t%32s", p->tid, p->euser, str, check_name_protected(bus, str) ? ' ' : '!', p->cmdline[0]);
-            for (gint i = 1; p->cmdline[i]; i++)
-                g_print(" %s", p->cmdline[i]);
+            g_print("%d\t%16s\t%40s%c\t%32s",
+                p->tid, p->euser, str, check_name_protected(bus, str) ? ' ' : '!',
+                p->cmdline ? p->cmdline[0] : "");
+
+            if (p->cmdline) {
+                for (gint i = 1; p->cmdline[i]; i++)
+                    g_print(" %s", p->cmdline[i]);
+            }
             g_print("\n");
         } else {
             g_print("%d\t%16s\t%40s%c\t%32s\n", -1, "unknown", str, check_name_protected(bus, str) ? ' ' : '!', "");
